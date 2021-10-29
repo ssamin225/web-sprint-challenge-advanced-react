@@ -10,12 +10,18 @@ export default class PlantList extends Component {
   //   - fetch data from the server endpoint - http://localhost:3333/plants
   //   - set the returned plants array to this.state.plants
   componentDidMount() {
-    axios.get('http://localhost:3333/plants')
+    this.source = axios.CancelToken.source()
+
+    axios.get('http://localhost:3333/plants', { cancelToken: this.source.token })
       .then(res => {
         this.setState({ plants: res.data })
       }).catch(err => {
         console.log(err);
       })
+  }
+
+  componentWillUnmount() {
+    this.source.cancel('axios get canceled');
   }
 
   /*********  DON'T CHANGE ANYTHING IN THE RENDER FUNCTION *********/
